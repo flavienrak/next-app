@@ -7,43 +7,42 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    # Exécute le workflow sur le runner Ubuntu
+    runs-on: [self-hosted, ubuntu-master]
 
     steps:
-      # 1️⃣ Checkout code
-      - uses: actions/checkout@v3
+      # 1️⃣ Récupération du code source
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # 2️⃣ Set up Node.js
-      - uses: actions/setup-node@v3
+      # 2️⃣ Préparer Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
 
-      # 3️⃣ Install dependencies & build
-      - run: |
+      # 3️⃣ Installation + build
+      - name: Install dependencies and build
+        run: |
           npm ci
           npm run build
 
-      # 4️⃣ Log in to Docker Hub
-      - uses: docker/login-action@v2
+      # 4️⃣ Connexion à Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 5️⃣ Build and push Docker image
-      - run: |
+      # 5️⃣ Construction + push de l’image Docker
+      - name: Build and push Docker image
+        run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/next-app:latest .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/next-app:latest
 
-      # 6️⃣ Set up kubectl
-      - uses: azure/setup-kubectl@v3
-        with:
-          version: v1.30.14
-
-      # 7️⃣ Configure KUBECONFIG
-      - run: echo "${{ secrets.KUBECONFIG }}" > kubeconfig
-      - run: export KUBECONFIG=$PWD/kubeconfig
-
-      # 8️⃣ Apply Kubernetes manifests
-      - run: |
+      # 6️⃣ Déploiement Kubernetes (ton runner a déjà accès à kubectl)
+      - name: Deploy to Kubernetes
+        run: |
           kubectl apply -f kubernetes/deployment.yaml
           kubectl apply -f kubernetes/service.yaml
