@@ -41,7 +41,7 @@ jobs:
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/next-app:latest .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/next-app:latest
 
-      # 6️⃣ Déploiement Kubernetes (ton runner a déjà accès à kubectl)
+      # 6️⃣ Déploiement Kubernetes
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -f kubernetes/deployment.yaml
