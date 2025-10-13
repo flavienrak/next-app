@@ -8,7 +8,7 @@ on:
 jobs:
   build-and-deploy:
     # Exécute le workflow sur le runner Ubuntu
-    runs-on: [self-hosted, ubuntu-master]
+    runs-on: self-hosted
 
     steps:
       # 1️⃣ Récupération du code source
