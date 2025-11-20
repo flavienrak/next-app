@@ -20,13 +20,13 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t flavien/next-app:${{ github.sha }} .
+          docker build -t flavienrak/next-app:${{ github.sha }} .
 
       - name: Push Docker image
         run: |
-          docker push flavien/next-app:${{ github.sha }}
+          docker push flavienrak/next-app:${{ github.sha }}
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl set image deployment/nextjs-deployment nextjs=flavien/next-app:${{ github.sha }}
+          kubectl set image deployment/nextjs-deployment nextjs=flavienrak/next-app:${{ github.sha }}
           kubectl rollout status deployment/nextjs-deployment
