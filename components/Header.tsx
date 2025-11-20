@@ -1,13 +1,13 @@
 'use client';
 
+import React from 'react';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
 
 export default function Header() {
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isVisible, setIsVisible] = React.useState(true);
+  const [lastScrollY, setLastScrollY] = React.useState(0);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > lastScrollY) {
         setIsVisible(false);
